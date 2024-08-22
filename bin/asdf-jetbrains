@@ -17,18 +17,28 @@ print_help() {
 	echo "EXAMPLE"
 	echo "  asdf jetbrains add idea         # Add ASDF plugin for JetBrains IDEA"
 	echo "  asdf list all idea              # List versions of JetBrains IDEA"
-	echo "  asdf idea install latest        # Install latest version of JetBrains IDEA"
+	echo "  asdf install idea latest        # Install latest version of JetBrains IDEA"
 	echo "  asdf global idea latest         # Set global version of JetBrains IDEA"
 	echo "  idea                            # Run JetBrains IDEA"
 }
 
 print_products() {
 	echo "JetBrains products:"
-	echo "  idea     - IntelliJ IDEA Ultimate"
-	echo "  ideac    - IntelliJ IDEA Community Edition"
-	echo "  pycharm  - PyCharm Professional Edition"
-	echo "  pycharmc - PyCharm Community Edition"
-	echo "  clion    - CLion"
+	echo "  clion      - CLion"
+	echo "  datagrip   - DataGrip"
+	echo "  dataspell  - DataSpell"
+	echo "  gateway    - Gateway"
+	echo "  goland     - GoLand"
+	echo "  idea       - IntelliJ IDEA Ultimate"
+	echo "  ideac      - IntelliJ IDEA Community Edition"
+	echo "  mps        - MPS"
+	echo "  phpstorm   - PhpStorm"
+	echo "  pycharm    - PyCharm Professional Edition"
+	echo "  pycharmc   - PyCharm Community Edition"
+	echo "  rider      - Rider"
+	echo "  rideru     - Rider for Unreal Engine"
+	echo "  rubymine   - RubyMine"
+	echo "  webstorm   - WebStorm"
 }
 
 add_product() {
@@ -36,11 +46,38 @@ add_product() {
 	name="$1"
 
 	case "${name}" in
+	"aqua")
+		add_jetbrains_product "aqua" "QA" "bin/aqua.sh --version"
+		;;
+	"clion")
+		add_jetbrains_product "clion" "CL" "bin/clion.sh --version"
+		;;
+	"clionn")
+		add_jetbrains_product "clionn" "CLN" "bin/clion.sh --version"
+		;;
+	"datagrip")
+		add_jetbrains_product "datagrip" "DG" "bin/datagrip.sh --version"
+		;;
+	"dataspell")
+		add_jetbrains_product "dataspell" "DS" "bin/dataspell.sh --version"
+		;;
+	"goland")
+		add_jetbrains_product "goland" "GO" "bin/goland.sh --version"
+		;;
 	"idea")
 		add_jetbrains_product "idea" "IIU" "bin/idea.sh --version"
 		;;
 	"ideac")
 		add_jetbrains_product "ideac" "IIC" "bin/idea.sh --version"
+		;;
+	"mps")
+		add_jetbrains_product "mps" "MPS" "bin/mps.sh --version"
+		;;
+	"gateway")
+		add_jetbrains_product "gateway" "GW" "bin/gateway.sh --version"
+		;;
+	"phpstorm")
+		add_jetbrains_product "phpstorm" "PS" "bin/phpstorm.sh --version"
 		;;
 	"pycharm")
 		add_jetbrains_product "pycharm" "PCP" "bin/pycharm.sh --version"
@@ -48,11 +85,26 @@ add_product() {
 	"pycharmc")
 		add_jetbrains_product "pycharmc" "PCC" "bin/pycharm.sh --version"
 		;;
-	"clion")
-		add_jetbrains_product "clion" "CL" "bin/clion.sh --version"
+	"rider")
+		add_jetbrains_product "rider" "RD" "bin/rider.sh --version"
+		;;
+	"rideru")
+		add_jetbrains_product "rideru" "RDCPPP" "bin/rider.sh --version"
+		;;
+	"rubymine")
+		add_jetbrains_product "rubymine" "RM" "bin/rubymine.sh --version"
+		;;
+	"rustrover")
+		add_jetbrains_product "rustrover" "RR" "bin/rustrover.sh --version"
+		;;
+	"webstorm")
+		add_jetbrains_product "webstorm" "WS" "bin/webstorm.sh --version"
+		;;
+	"writerside")
+		add_jetbrains_product "writerside" "WRS" "bin/writerside.sh --version"
 		;;
 	*)
-		fail "Unknown product name: ${name}"
+		fail "Unknown product name: '${name}'"
 		;;
 	esac
 }
@@ -68,7 +120,7 @@ add_jetbrains_product() {
 	product_plugin_dir="${plugin_dir}/../${name}"
 
 	if [ -d "${product_plugin_dir}" ]; then
-		fail "Product ${name} already installed"
+		fail "Product '${name}' already installed"
 	fi
 
 	cp -r "${plugin_dir}/jetbrains/plugin-template/." "${product_plugin_dir}"
@@ -92,13 +144,18 @@ remove_product() {
 	product_plugin_dir="${plugin_dir}/../${name}"
 
 	if [ ! -d "${product_plugin_dir}" ]; then
-		fail "Product ${name} not installed"
+		fail "Product '${name}' not installed"
 	fi
 
 	rm -rf "${product_plugin_dir}"
 }
 
-args=("$1")
+if [ "$*" == "" ]; then
+	args=("" "")
+else
+	args=($1)
+fi
+
 command=${args[0]}
 
 case "${command}" in
@@ -120,6 +177,6 @@ case "${command}" in
 	exit 0
 	;;
 *)
-	fail "Unknown command: ${command}"
+	fail "Unknown command: '${command}'"
 	;;
 esac
